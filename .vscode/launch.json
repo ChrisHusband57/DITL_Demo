@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "al",
+      "request": "launch",
+      "name": "Publish",
+      "server": "https://devprojdocker.navondemand.co.uk:12430",
+      "serverInstance": "BC",
+      "authentication": "UserPassword"
+    }
+  ]
+}

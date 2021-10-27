@@ -1,0 +1,30 @@
+{
+  "id": "2c89cfd6-c0b4-4ad9-aef4-0f7a48557b75",
+  "name": "Jacaranda DITL Demo",
+  "publisher": "The NAV People",
+  "version": "1.0.0.8",
+  "runtime": "4.0",
+  "showMyCode": true,
+  "target": "Cloud",
+  "platform": "18.0.29486.0",
+  "dependencies": [
+    {
+      "appId": "437dbf0e-84ff-417a-965d-ed2bb9650972",
+      "name": "Base Application",
+      "version": "15.0.0.0",
+      "publisher": "Microsoft"
+    },
+    {
+      "appId": "63ca2fa4-4f03-4f2b-a480-172fef340d3f",
+      "name": "System Application",
+      "version": "15.0.0.0",
+      "publisher": "Microsoft"
+    }
+  ],
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 50101
+    }
+  ]
+}
