@@ -50,6 +50,7 @@ codeunit 50001 TNP_EventSubscribers
         WhseJournalLine: Record "Warehouse Journal Line";
         WhseItemTracking: Record "Whse. Item Tracking Line";
         JournalQty: Decimal;
+        WhseJnlRegister: Codeunit "Whse. Jnl.-Register";
     begin
         if WarehouseActivityLine."Activity Type" = WarehouseActivityLine."Activity Type"::Pick then begin
             WarehouseActivityLine.SetRange("Action Type", WarehouseActivityLine."Action Type"::Take);
@@ -73,6 +74,7 @@ codeunit 50001 TNP_EventSubscribers
                 end;
             end else begin
                 Clear(RemainingQty);
+                ManfacturingSetup.Get();
                 WarehouseEntry.Reset();
                 WarehouseEntry.SetRange("Item No.", WarehouseActivityLine."Item No.");
                 WarehouseEntry.SetRange("Lot No.", WarehouseActivityLine."Lot No.");
@@ -85,9 +87,17 @@ codeunit 50001 TNP_EventSubscribers
                         Clear(JournalQty);
                         JournalQty := RemainingQty - WarehouseActivityLine."Qty. Remaining";
                         WhseJournalLine.Reset();
+                        WhseJournalLine.SetRange("Journal Template Name", 'ITEM');
+                        WhseJournalLine.SetRange("Journal Batch Name", ManfacturingSetup."Default Cutting Journal");
+                        WhseJournalLine.SetRange("Line No.", WarehouseActivityLine."Line No.");
+                        if not WhseJournalLine.IsEmpty then
+                            WhseJournalLine.Delete();
                         begin
+                            ManfacturingSetup.Get();
+                            WhseJournalLine.Init();
                             WhseJournalLine."Journal Template Name" := 'ITEM';
-                            WhseJournalLine."Journal Batch Name" := 'DEFAULT';
+                            WhseJournalLine."Journal Batch Name" := ManfacturingSetup."Default Cutting Journal";
+                            WhseJournalLine."Registering Date" := TODAY;
                             WhseJournalLine.Validate("Location Code", WarehouseActivityLine."Location Code");
                             WhseJournalLine.Validate("Item No.", WarehouseActivityLine."Item No.");
                             WhseJournalLine."Line No." := WarehouseActivityLine."Line No.";
@@ -108,11 +118,15 @@ codeunit 50001 TNP_EventSubscribers
                             WhseItemTracking."Source Type" := 7311;
                             WhseItemTracking."Source Ref. No." := WhseJournalLine."Line No.";
                             WhseItemTracking.Validate("Quantity (Base)", JournalQty);
+                            WhseItemTracking.Validate("Qty. to Handle (Base)", JournalQty);
                             WhseItemTracking."Lot No." := WarehouseActivityLine."Lot No.";
                             WhseItemTracking.Insert();
                         end;
                     end;
                 end;
+                ManfacturingSetup.Get();
+                if ManfacturingSetup."Auto-Post Cutting Jnl" then
+                    WhseJnlRegister.Run(WhseJournalLine);
             end;
         end;
     end;
