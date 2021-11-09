@@ -89,6 +89,7 @@ codeunit 50001 TNP_EventSubscribers
                         WhseJournalLine.Reset();
                         WhseJournalLine.SetRange("Journal Template Name", 'ITEM');
                         WhseJournalLine.SetRange("Journal Batch Name", ManfacturingSetup."Default Cutting Journal");
+                        WhseJournalLine.SetRange("Location Code", WarehouseActivityLine."Location Code");
                         WhseJournalLine.SetRange("Line No.", WarehouseActivityLine."Line No.");
                         if not WhseJournalLine.IsEmpty then
                             WhseJournalLine.Delete();
